@@ -3,6 +3,7 @@ include 'config.php'; // PDO 연결
 
 $result_clubs = []; // 동아리 목록 초기화
 $result_professors = []; // 교수 목록 초기화
+$result_members = []; // 동아리원 목록 초기화
 
 try {
     // 동아리 데이터 조회 쿼리
@@ -16,6 +17,12 @@ try {
     $stmt_professors = $pdo->prepare($sql_professors);
     $stmt_professors->execute();
     $result_professors = $stmt_professors->fetchAll(PDO::FETCH_ASSOC);
+
+    // 동아리원 데이터 조회 쿼리
+    $sql_members = "SELECT Name, School_id, Phone_number, Club_id FROM MEMBER";
+    $stmt_members = $pdo->prepare($sql_members);
+    $stmt_members->execute();
+    $result_members = $stmt_members->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     echo "데이터 조회 실패: " . $e->getMessage();
 }
@@ -30,6 +37,7 @@ try {
     <style>
         .tables {
             display: flex;
+            flex-direction: column;
             gap: 40px;
         }
         table {
@@ -57,7 +65,7 @@ try {
                     <th>동아리 이름</th>
                     <th>관심 분야</th>
                     <th>교수 ID</th>
-                    <th>자세히 보기</th>
+                    <th>상세 정보</th>
                 </tr>
                 <?php
                 if (!empty($result_clubs)) {
@@ -67,11 +75,11 @@ try {
                             <td>{$row['Name']}</td>
                             <td>{$row['Interest']}</td>
                             <td>{$row['Pf_id']}</td>
-                            <td><a href='club_details.php?Club_id={$row['Club_id']}'>자세히 보기</a></td>
+                            <td><a href='club_details.php?Club_id={$row['Club_id']}'>상세 정보</a></td>
                         </tr>";
                     }
                 } else {
-                    echo "<tr><td colspan='4'>동아리가 없습니다.</td></tr>";
+                    echo "<tr><td colspan='5'>동아리가 없습니다.</td></tr>";
                 }
                 ?>
             </table>
@@ -89,6 +97,7 @@ try {
                         <th>이름</th>
                         <th>전화번호</th>
                         <th>전공</th>
+                        <th>상세 정보</th>
                     </tr>
                     <?php
                     if (!empty($result_professors)) {
@@ -99,16 +108,44 @@ try {
                                 <td>{$prof['Name']}</td>
                                 <td>{$prof['Phone_number']}</td>
                                 <td>{$prof['Major']}</td>
+                                <td><a href='prof_details.php?Pf_id={$prof['Pf_id']}'>상세 정보</a></td>
                             </tr>";
                         }
                     } else {
-                        echo "<tr><td colspan='5'>교수가 없습니다.</td></tr>";
+                        echo "<tr><td colspan='6'>교수가 없습니다.</td></tr>";
                     }
                     ?>
                 </table>
                 <button type="submit">삭제하기</button>
             </form>
             <a href="add_pf.php">추가하기</a>
+        </div>
+
+        <!-- 동아리원 목록 -->
+        <div>
+            <h2>전체 동아리원 목록</h2>
+            <table>
+                <tr>
+                    <th>이름</th>
+                    <th>학번</th>
+                    <th>전화번호</th>
+                    <th>소속 동아리 ID</th>
+                </tr>
+                <?php
+                if (!empty($result_members)) {
+                    foreach ($result_members as $member) {
+                        echo "<tr>
+                            <td>{$member['Name']}</td>
+                            <td>{$member['School_id']}</td>
+                            <td>{$member['Phone_number']}</td>
+                            <td>{$member['Club_id']}</td>
+                        </tr>";
+                    }
+                } else {
+                    echo "<tr><td colspan='4'>동아리원이 없습니다.</td></tr>";
+                }
+                ?>
+            </table>
         </div>
     </div>
 </body>
