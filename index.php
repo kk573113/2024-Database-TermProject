@@ -1,11 +1,16 @@
 <?php
 include 'config.php'; // PDO 연결
 
-// 동아리 데이터 조회 쿼리
-$sql = "SELECT Club_id, Name, Interest FROM CLUB";
-$stmt = $pdo->prepare($sql); // PDO Statement 준비
-$stmt->execute(); // 쿼리 실행
-$result = $stmt->fetchAll(PDO::FETCH_ASSOC); // 결과 가져오기
+$result = []; // 초기화
+try {
+    // 동아리 데이터 조회 쿼리
+    $sql = "SELECT Club_id, Name, Interest FROM CLUB";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    echo "데이터 조회 실패: " . $e->getMessage();
+}
 ?>
 
 <!DOCTYPE html>
@@ -13,10 +18,11 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC); // 결과 가져오기
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>동아리 리스트</title>
+    <title>충북대학교 소프트웨어학부 동아리 관리 시스템</title>
 </head>
 <body>
-    <h1>동아리 리스트</h1>
+    <h1>충북대학교 소프트웨어학부 동아리 관리 시스템</h1>
+    <h2>동아리 목록</h2>
     <table border="1">
         <tr>
             <th>동아리 ID</th>
@@ -25,7 +31,7 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC); // 결과 가져오기
             <th>자세히 보기</th>
         </tr>
         <?php
-        if ($result) {
+        if (!empty($result)) {
             foreach ($result as $row) {
                 echo "<tr>
                     <td>{$row['Club_id']}</td>
@@ -39,5 +45,6 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC); // 결과 가져오기
         }
         ?>
     </table>
+    <a href="add_club.php">동아리 추가</a> <!-- 동아리 추가 링크 -->
 </body>
 </html>
