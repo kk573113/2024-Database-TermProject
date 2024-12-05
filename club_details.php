@@ -107,6 +107,10 @@ $professor = $stmt_professor->fetch(PDO::FETCH_ASSOC);
     <?php if ($professor): ?>
         <table border="1">
             <tr>
+            <tr>
+                <th>교수 ID</th>
+                <td><?php echo htmlspecialchars($club['Pf_id']); ?></td>
+            </tr>
                 <th>교수 이름</th>
                 <td><?php echo htmlspecialchars($professor['Name']); ?></td>
             </tr>
@@ -186,6 +190,7 @@ $professor = $stmt_professor->fetch(PDO::FETCH_ASSOC);
 </form>
 
 <a href="index.php">돌아가기</a>
+<a href="delete_club.php?Club_id=<?php echo $club_id; ?>" onclick="return confirm('정말로 삭제하시겠습니까?');">삭제하기</a>
 </body>
 </html>
 

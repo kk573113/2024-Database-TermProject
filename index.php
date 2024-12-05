@@ -76,36 +76,39 @@ try {
                 ?>
             </table>
             <a href="add_club.php">추가하기</a>
-            <a href="delete_club.php">삭제하기</a>
         </div>
 
         <!-- 교수 목록 -->
         <div>
             <h2>교수 목록</h2>
-            <table>
-                <tr>
-                    <th>교수 ID</th>
-                    <th>이름</th>
-                    <th>전화번호</th>
-                    <th>전공</th>
-                </tr>
-                <?php
-                if (!empty($result_professors)) {
-                    foreach ($result_professors as $prof) {
-                        echo "<tr>
-                            <td>{$prof['Pf_id']}</td>
-                            <td>{$prof['Name']}</td>
-                            <td>{$prof['Phone_number']}</td>
-                            <td>{$prof['Major']}</td>
-                        </tr>";
+            <form method="POST" action="delete_pf.php">
+                <table>
+                    <tr>
+                        <th>선택</th>
+                        <th>교수 ID</th>
+                        <th>이름</th>
+                        <th>전화번호</th>
+                        <th>전공</th>
+                    </tr>
+                    <?php
+                    if (!empty($result_professors)) {
+                        foreach ($result_professors as $prof) {
+                            echo "<tr>
+                                <td><input type='radio' name='Pf_id' value='{$prof['Pf_id']}' required></td>
+                                <td>{$prof['Pf_id']}</td>
+                                <td>{$prof['Name']}</td>
+                                <td>{$prof['Phone_number']}</td>
+                                <td>{$prof['Major']}</td>
+                            </tr>";
+                        }
+                    } else {
+                        echo "<tr><td colspan='5'>교수가 없습니다.</td></tr>";
                     }
-                } else {
-                    echo "<tr><td colspan='4'>교수가 없습니다.</td></tr>";
-                }
-                ?>
-            </table>
+                    ?>
+                </table>
+                <button type="submit">삭제하기</button>
+            </form>
             <a href="add_pf.php">추가하기</a>
-            <a href="delete_pf.php">삭제하기</a>
         </div>
     </div>
 </body>
