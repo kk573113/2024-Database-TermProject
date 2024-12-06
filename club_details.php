@@ -138,7 +138,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['add_activity'])) {
     <?php endif; ?>
     <h3>예산 추가</h3>
       <form method="POST" action="">
-        <label for="Manager_name">매니저 이름:</label>
+        <label for="Manager_name">담당자 이름:</label>
         <input type="text" id="Manager_name" name="Manager_name" required><br>
         <label for="Amount">예산 금액:</label>
         <input type="number" id="Amount" name="Amount" required><br>

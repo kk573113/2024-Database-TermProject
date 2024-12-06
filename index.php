@@ -4,6 +4,7 @@ include 'config.php'; // PDO 연결
 $result_clubs = []; // 동아리 목록 초기화
 $result_professors = []; // 교수 목록 초기화
 $result_members = []; // 동아리원 목록 초기화
+$result_meetings = []; // 미팅 목록 초기화
 
 try {
     // 동아리 데이터 조회 쿼리
@@ -23,6 +24,12 @@ try {
     $stmt_members = $pdo->prepare($sql_members);
     $stmt_members->execute();
     $result_members = $stmt_members->fetchAll(PDO::FETCH_ASSOC);
+
+    // 미팅 데이터 조회 쿼리
+    $sql_meetings = "SELECT Meet_id, Date, Place, Agenda, Pf_id FROM MEETING";
+    $stmt_meetings = $pdo->prepare($sql_meetings);
+    $stmt_meetings->execute();
+    $result_meetings = $stmt_meetings->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     echo "데이터 조회 실패: " . $e->getMessage();
 }
@@ -146,6 +153,40 @@ try {
                 }
                 ?>
             </table>
+        </div>
+
+        <!-- 미팅 목록 -->
+        <div>
+            <h2>미팅 목록</h2>
+            <table>
+                <tr>
+                    <th>미팅 ID</th>
+                    <th>교수 ID</th>
+                    <th>날짜</th>
+                    <th>장소</th>
+                    <th>안건</th>
+                    <th>수정</th>
+                </tr>
+                <?php
+                if (!empty($result_meetings)) {
+                    foreach ($result_meetings as $meeting) {
+                        echo "<tr>
+                            <td>{$meeting['Meet_id']}</td>
+                            <td>{$meeting['Pf_id']}</td>
+                            <td>{$meeting['Date']}</td>
+                            <td>{$meeting['Place']}</td>
+                            <td>{$meeting['Agenda']}</td>
+                            <td><a href='modify_meet.php?Meet_id={$meeting['Meet_id']}'>수정</a></td>
+                        </tr>";
+                    }
+                } else {
+                    echo "<tr><td colspan='6'>미팅 정보가 없습니다.</td></tr>";
+                }
+                ?>
+            </table>
+            <button type="submit">삭제하기</button>
+          </form>
+          <a href="add_meet.php">추가하기</a>
         </div>
     </div>
 </body>

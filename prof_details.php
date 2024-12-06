@@ -98,49 +98,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['delete_meeting'])) {
         </table>
         <button type="submit" name="edit_professor">수정하기</button>
     </form>
-
-    <!-- 미팅 정보 -->
-    <h2>미팅 정보</h2>
-    <?php if ($meetings): ?>
-        <table border="1">
-            <tr>
-                <th>미팅 ID</th>
-                <th>날짜</th>
-                <th>장소</th>
-                <th>의제</th>
-                <th>삭제</th>
-            </tr>
-            <?php foreach ($meetings as $meeting): ?>
-                <tr>
-                    <td><?php echo htmlspecialchars($meeting['Meet_id']); ?></td>
-                    <td><?php echo htmlspecialchars($meeting['Date']); ?></td>
-                    <td><?php echo htmlspecialchars($meeting['Place']); ?></td>
-                    <td><?php echo htmlspecialchars($meeting['Agenda']); ?></td>
-                    <td>
-                        <form method="POST" action="" style="display:inline;">
-                            <input type="hidden" name="Meet_id" value="<?php echo $meeting['Meet_id']; ?>">
-                            <button type="submit" name="delete_meeting">삭제</button>
-                        </form>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-        </table>
-    <?php else: ?>
-        <p>미팅 정보가 없습니다.</p>
-    <?php endif; ?>
-
-    <!-- 미팅 추가 -->
-    <h3>미팅 추가</h3>
-    <form method="POST" action="">
-        <label for="Date">날짜:</label>
-        <input type="date" id="Date" name="Date" required><br>
-        <label for="Place">장소:</label>
-        <input type="text" id="Place" name="Place" required><br>
-        <label for="Agenda">의제:</label>
-        <input type="text" id="Agenda" name="Agenda" required><br>
-        <button type="submit" name="add_meeting">추가하기</button>
-    </form>
-
     <a href="index.php">돌아가기</a>
 </body>
 </html>
