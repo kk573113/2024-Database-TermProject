@@ -3,7 +3,7 @@ include 'config.php'; // PDO 연결
 
 if (!isset($_GET['Meet_id'])) {
     echo "<script>
-            alert('미팅 ID가 제공되지 않았습니다.');
+            alert('회의 ID가 제공되지 않았습니다.');
             window.location.href = 'index.php';
           </script>";
     exit;
@@ -11,7 +11,7 @@ if (!isset($_GET['Meet_id'])) {
 
 $meet_id = $_GET['Meet_id'];
 
-// 미팅 정보 가져오기
+// 회의 정보 가져오기
 $sql_meeting = "SELECT * FROM MEETING WHERE Meet_id = :meet_id";
 $stmt_meeting = $pdo->prepare($sql_meeting);
 $stmt_meeting->bindParam(':meet_id', $meet_id, PDO::PARAM_INT);
@@ -20,13 +20,32 @@ $meeting = $stmt_meeting->fetch(PDO::FETCH_ASSOC);
 
 if (!$meeting) {
     echo "<script>
-            alert('해당 미팅 정보를 찾을 수 없습니다.');
+            alert('해당 회의 정보를 찾을 수 없습니다.');
             window.location.href = 'index.php';
           </script>";
     exit;
 }
 
-// 미팅 수정 처리
+// 회의 삭제 처리
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['delete_meeting'])) {
+    $sql_delete = "DELETE FROM MEETING WHERE Meet_id = :meet_id";
+    $stmt_delete = $pdo->prepare($sql_delete);
+    $stmt_delete->bindParam(':meet_id', $meet_id, PDO::PARAM_INT);
+
+    if ($stmt_delete->execute()) {
+        echo "<script>
+                alert('회의가 성공적으로 삭제되었습니다.');
+                window.location.href = 'index.php';
+              </script>";
+        exit;
+    } else {
+        echo "<script>
+                alert('회의 삭제 중 오류가 발생했습니다.');
+              </script>";
+    }
+}
+
+// 회의 수정 처리
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['update_meeting'])) {
     $date = $_POST['Date'];
     $place = $_POST['Place'];
@@ -43,32 +62,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['update_meeting'])) {
 
     if ($stmt_update->execute()) {
         echo "<script>
-                alert('미팅이 성공적으로 수정되었습니다.');
+                alert('회의가 성공적으로 수정되었습니다.');
                 window.location.href = 'index.php';
               </script>";
         exit;
     } else {
         echo "<script>
-                alert('미팅 수정 중 오류가 발생했습니다.');
-              </script>";
-    }
-}
-
-// 미팅 삭제 처리
-if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['delete_meeting'])) {
-    $sql_delete = "DELETE FROM MEETING WHERE Meet_id = :meet_id";
-    $stmt_delete = $pdo->prepare($sql_delete);
-    $stmt_delete->bindParam(':meet_id', $meet_id, PDO::PARAM_INT);
-
-    if ($stmt_delete->execute()) {
-        echo "<script>
-                alert('미팅이 성공적으로 삭제되었습니다.');
-                window.location.href = 'index.php';
-              </script>";
-        exit;
-    } else {
-        echo "<script>
-                alert('미팅 삭제 중 오류가 발생했습니다.');
+                alert('회의 수정 중 오류가 발생했습니다.');
               </script>";
     }
 }
@@ -79,10 +79,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['delete_meeting'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>미팅 수정/삭제</title>
+    <title>회의 수정/삭제</title>
 </head>
 <body>
-    <h1>미팅 수정/삭제</h1>
+    <h1>회의 수정/삭제</h1>
     <form method="POST" action="">
         <label for="Date">날짜:</label><br>
         <input type="date" id="Date" name="Date" value="<?php echo htmlspecialchars($meeting['Date']); ?>" required><br>

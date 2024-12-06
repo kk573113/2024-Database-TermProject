@@ -4,7 +4,7 @@ include 'config.php'; // PDO 연결
 $result_clubs = []; // 동아리 목록 초기화
 $result_professors = []; // 교수 목록 초기화
 $result_members = []; // 동아리원 목록 초기화
-$result_meetings = []; // 미팅 목록 초기화
+$result_meetings = []; // 회의 목록 초기화
 
 try {
     // 동아리 데이터 조회 쿼리
@@ -25,7 +25,7 @@ try {
     $stmt_members->execute();
     $result_members = $stmt_members->fetchAll(PDO::FETCH_ASSOC);
 
-    // 미팅 데이터 조회 쿼리
+    // 회의 데이터 조회 쿼리
     $sql_meetings = "SELECT Meet_id, Date, Place, Agenda, Pf_id FROM MEETING";
     $stmt_meetings = $pdo->prepare($sql_meetings);
     $stmt_meetings->execute();
@@ -72,7 +72,7 @@ try {
                     <th>동아리 이름</th>
                     <th>관심 분야</th>
                     <th>동아리 방</th>
-                    <th>교수 ID</th>
+                    <th>지도 교수 ID</th>
                     <th>상세 정보</th>
                 </tr>
                 <?php
@@ -157,12 +157,12 @@ try {
             </table>
         </div>
 
-        <!-- 미팅 목록 -->
+        <!-- 회의 목록 -->
         <div>
-            <h2>미팅 목록</h2>
+            <h2>회의 목록</h2>
             <table>
                 <tr>
-                    <th>미팅 ID</th>
+                    <th>회의 ID</th>
                     <th>교수 ID</th>
                     <th>날짜</th>
                     <th>장소</th>
@@ -182,7 +182,7 @@ try {
                         </tr>";
                     }
                 } else {
-                    echo "<tr><td colspan='6'>미팅 정보가 없습니다.</td></tr>";
+                    echo "<tr><td colspan='6'>회의 정보가 없습니다.</td></tr>";
                 }
                 ?>
             </table>

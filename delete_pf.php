@@ -5,13 +5,23 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['Pf_id'])) {
     $pf_id = $_POST['Pf_id'];
 
     try {
-        // 동아리 테이블의 Pf_id를 NULL로 설정
-        $sql_update_club = "UPDATE CLUB SET Pf_id = NULL WHERE Pf_id = :pf_id";
-        $stmt_update_club = $pdo->prepare($sql_update_club);
-        $stmt_update_club->bindParam(':pf_id', $pf_id, PDO::PARAM_INT);
-        $stmt_update_club->execute();
+        // 해당 교수가 지도하고 있는 동아리 확인
+        $sql_check_club = "SELECT * FROM CLUB WHERE Pf_id = :pf_id";
+        $stmt_check_club = $pdo->prepare($sql_check_club);
+        $stmt_check_club->bindParam(':pf_id', $pf_id, PDO::PARAM_INT);
+        $stmt_check_club->execute();
+        $clubs = $stmt_check_club->fetchAll(PDO::FETCH_ASSOC);
 
-        // 교수 삭제 쿼리
+        // 지도하고 있는 동아리가 있는 경우 삭제 금지
+        if (!empty($clubs)) {
+            echo "<script>
+                    alert('해당 교수는 동아리를 지도하고 있습니다. 먼저 동아리 정보를 수정하세요.');
+                    window.history.back();
+                  </script>";
+            exit;
+        }
+
+        // 지도 동아리가 없는 경우 삭제 진행
         $sql_delete_professor = "DELETE FROM PROFESSOR WHERE Pf_id = :pf_id";
         $stmt_delete_professor = $pdo->prepare($sql_delete_professor);
         $stmt_delete_professor->bindParam(':pf_id', $pf_id, PDO::PARAM_INT);
