@@ -142,117 +142,250 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>동아리 상세 정보</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        h1 {
+            background-color: #11264f;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .back-button {
+            margin-left: 20px; 
+            margin-top: 10px;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
+        }
+        .section {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .split-container {
+            display: flex;
+            gap: 20px;
+        }
+        .split-container > .section {
+            flex: 1;
+        }
+        h2 {
+            color: #11264f;
+            border-bottom: 2px solid #11264f;
+            padding-bottom: 8px;
+            margin-bottom: 20px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #11264f;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        button {
+            background-color: #11264f;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin-top: 10px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        button:hover {
+            background-color: #0d1a37;
+        }
+        .link-button {
+            text-decoration: none;
+            display: inline-block;
+        }
+        input[type="text"], input[type="number"], input[type="date"] {
+            width: 100%;
+            padding: 8px;
+            margin: 8px 0;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        @media (max-width: 768px) {
+            .split-container {
+                flex-direction: column;
+            }
+            th, td {
+                font-size: 14px;
+            }
+            button {
+                font-size: 12px;
+                padding: 8px 16px;
+            }
+        }
+            .additional-info {
+                margin-top: 20px;
+                padding: 10px;
+                background-color: #f2f2f2;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+            }
+            .additional-info h3 {
+                color: #11264f;
+                margin-bottom: 10px;
+            }
+            .additional-info ul {
+                list-style-type: none;
+                padding: 0;
+            }
+            .additional-info ul li {
+                margin-bottom: 10px;
+            }
+            .additional-info ul li a {
+                color: #11264f;
+                text-decoration: none;
+                font-weight: bold;
+            }
+            .additional-info ul li a:hover {
+                text-decoration: underline;
+            }
+
+    </style>
 </head>
 <body>
     <h1>동아리 상세 정보</h1>
+    <div class="back-button">
+        <a href="index.php" class="link-button">
+            <button type="button">뒤로가기</button>
+        </a>
+    </div>
+    <div class="container">
+        <!-- Split Container for 동아리 정보 and 지도 교수 정보 -->
+        <div class="split-container">
+            <!-- 동아리 정보 -->
+            <div class="section">
+                <h2>동아리 정보</h2>
+                <form method="POST" action="">
+                    <table>
+                        <tr>
+                            <th>동아리 ID</th>
+                            <td><?php echo htmlspecialchars($club['Club_id']); ?></td>
+                        </tr>
+                        <tr>
+                            <th>동아리 이름</th>
+                            <td><input type="text" name="Name" value="<?php echo htmlspecialchars($club['Name']); ?>" required></td>
+                        </tr>
+                        <tr>
+                            <th>관심 분야</th>
+                            <td><input type="text" name="Interest" value="<?php echo htmlspecialchars($club['Interest']); ?>" required></td>
+                        </tr>
+                        <tr>
+                            <th>동아리 방</th>
+                            <td><input type="text" name="Club_room" value="<?php echo htmlspecialchars($club['Club_room']); ?>"></td>
+                        </tr>
+                        <tr>
+                            <th>지도 교수 ID</th>
+                            <td><input type="number" name="Pf_id" value="<?php echo htmlspecialchars($club['Pf_id']); ?>" required></td>
+                        </tr>
+                    </table>
+                    <div class="actions">
+                        <button type="submit" name="update_club">수정</button>
+                        <a href="delete_club.php?Club_id=<?php echo $club_id; ?>" class="link-button" onclick="return confirm('동아리의 모든 정보가 삭제됩니다. 삭제하시겠습니까?');">
+                            <button type="button">삭제</button>
+                        </a>
+                    </div>
+                </form>
+            <!-- 추가 정보 링크 -->
+            <h3>추가 정보</h3>
+            <div class="additional-info">
+                <ul>
+                    <li><a href="budget_details.php?Club_id=<?php echo $club_id; ?>">예산 내역</a></li>
+                    <li><a href="activity_details.php?Club_id=<?php echo $club_id; ?>">활동 목록</a></li>
+                </ul>
+            </div>
+        </div>
 
-    <!-- 동아리 정보 -->
-    <h2>동아리 정보</h2>
-    <form method="POST" action="">
-        <table border="1">
-            <tr>
-                <th>동아리 ID</th>
-                <td><?php echo htmlspecialchars($club['Club_id']); ?></td>
-            </tr>
-            <tr>
-                <th>동아리 이름</th>
-                <td><input type="text" name="Name" value="<?php echo htmlspecialchars($club['Name']); ?>" required></td>
-            </tr>
-            <tr>
-                <th>관심 분야</th>
-                <td><input type="text" name="Interest" value="<?php echo htmlspecialchars($club['Interest']); ?>" required></td>
-            </tr>
-            <tr>
-                <th>동아리 방</th>
-                <td><input type="text" name="Club_room" value="<?php echo htmlspecialchars($club['Club_room']); ?>"></td>
-            </tr>
-            <tr>
-                <th>지도 교수 ID</th>
-                <td><input type="number" name="Pf_id" value="<?php echo htmlspecialchars($club['Pf_id']); ?>" required></td>
-            </tr>
-        </table>
-        <button type="submit" name="update_club">수정</button>
-        <!-- 예산 및 활동 정보 링크 추가 -->
-        <h2>추가 정보</h2>
-        <ul>
-            <li><a href="budget_details.php?Club_id=<?php echo $club_id; ?>">동아리 예산 상세 정보 보기</a></li>
-            <li><a href="activity_details.php?Club_id=<?php echo $club_id; ?>">동아리 활동 상세 정보 보기</a></li>
-        </ul>
-    </form>
+            <!-- 지도 교수 정보 -->
+            <div class="section">
+                <h2>지도 교수 정보</h2>
+                <?php if ($professor): ?>
+                    <form method="POST" action="">
+                        <table>
+                            <tr>
+                                <th>교수 ID</th>
+                                <td><?php echo htmlspecialchars($professor['Pf_id']); ?></td>
+                            </tr>
+                            <tr>
+                                <th>이름</th>
+                                <td><input type="text" name="Prof_Name" value="<?php echo htmlspecialchars($professor['Name']); ?>" required></td>
+                            </tr>
+                            <tr>
+                                <th>전공</th>
+                                <td><input type="text" name="Major" value="<?php echo htmlspecialchars($professor['Major']); ?>" required></td>
+                            </tr>
+                            <tr>
+                                <th>전화번호</th>
+                                <td><input type="text" name="Phone_number" value="<?php echo htmlspecialchars($professor['Phone_number']); ?>" required></td>
+                            </tr>
+                        </table>
+                        <button type="submit" name="update_professor">수정</button>
+                    </form>
+                <?php else: ?>
+                    <p>지도 교수 정보가 없습니다.</p>
+                <?php endif; ?>
+            </div>
+        </div>
 
-    <!-- 지도 교수 정보 -->
-    <h2>지도 교수 정보</h2>
-    <?php if ($professor): ?>
-        <!-- 지도 교수 정보를 감싸는 form 태그 추가 -->
-        <form method="POST" action="">
-            <table border="1">
-              <tr>
-                  <th>교수 ID</th>
-                  <td><?php echo htmlspecialchars($professor['Pf_id']); ?></td>
-              </tr>
-              <tr>
-                  <th>이름</th>
-                  <td><input type="text" name="Prof_Name" value="<?php echo htmlspecialchars($professor['Name']); ?>" required></td>
-              </tr>
-              <tr>
-                  <th>전공</th>
-                  <td><input type="text" name="Major" value="<?php echo htmlspecialchars($professor['Major']); ?>" required></td>
-              </tr>
-              <tr>
-                  <th>전화번호</th>
-                  <td><input type="text" name="Phone_number" value="<?php echo htmlspecialchars($professor['Phone_number']); ?>" required></td>
-              </tr>
-            </table>
-            <!-- form 태그 안에 submit 버튼 포함 -->
-            <button type="submit" name="update_professor">수정</button>
-        </form>
-    <?php else: ?>
-        <p>지도 교수 정보가 없습니다.</p>
-    <?php endif; ?>
+        <!-- 동아리원 목록 -->
+        <div class="section">
+            <h2>동아리원 목록</h2>
+            <form method="POST" action="">
+                <table>
+                    <tr>
+                        <th>학번</th>
+                        <th>이름</th>
+                        <th>전화번호</th>
+                        <th>수정</th>
+                        <th>삭제</th>
+                    </tr>
+                    <?php foreach ($members as $member): ?>
+                        <tr>
+                            <td><input type="text" name="School_id" value="<?php echo htmlspecialchars($member['School_id']); ?>" readonly></td>
+                            <td><input type="text" name="Name" value="<?php echo htmlspecialchars($member['Name']); ?>" required></td>
+                            <td><input type="text" name="Phone_number" value="<?php echo htmlspecialchars($member['Phone_number']); ?>" required></td>
+                            <td><button type="submit" name="update_member" value="<?php echo $member['School_id']; ?>">수정</button></td>
+                            <td><button type="submit" name="delete_member" value="<?php echo $member['School_id']; ?>">삭제</button></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </table>
+            </form>
 
-    <!-- 동아리원 목록 -->
-    <h2>동아리원 목록</h2>
-    <form method="POST" action="">
-        <table border="1">
-            <tr>
-                <th>학번</th>
-                <th>이름</th>
-                <th>전화번호</th>
-                <th>수정</th>
-                <th>삭제</th>
-            </tr>
-            <?php foreach ($members as $member): ?>
-                <tr>
-                    <td>
-                        <input type="text" name="School_id" value="<?php echo htmlspecialchars($member['School_id']); ?>" required>
-                    </td>
-                    <td>
-                        <input type="text" name="Name" value="<?php echo htmlspecialchars($member['Name']); ?>" required>
-                    </td>
-                    <td>
-                        <input type="text" name="Phone_number" value="<?php echo htmlspecialchars($member['Phone_number']); ?>" required>
-                    </td>
-                    <td>
-                        <button type="submit" name="update_member" value="<?php echo $member['School_id']; ?>">수정</button>
-                    </td>
-                    <td>
-                        <button type="submit" name="delete_member" value="<?php echo $member['School_id']; ?>">삭제</button>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-        </table>
-    </form>
-    <h3>동아리원 추가</h3>
-    <form method="POST" action="">
-        <label for="Name">이름:</label>
-        <input type="text" id="Name" name="Name" required><br>
-        <label for="School_id">학번:</label>
-        <input type="number" id="School_id" name="School_id" required><br>
-        <label for="Phone_number">전화번호:</label>
-        <input type="text" id="Phone_number" name="Phone_number" required><br>
-        <button type="submit" name="add_member">추가</button>
-    </form>
-    <a href="index.php">뒤로가기</a>
-    <a href="delete_club.php?Club_id=<?php echo $club_id; ?>" onclick="return confirm('정말로 삭제하시겠습니까?');">삭제하기</a>
+            <h3>동아리원 추가</h3>
+            <form method="POST" action="">
+                <label for="Name">이름:</label>
+                <input type="text" id="Name" name="Name" required><br>
+                <label for="School_id">학번:</label>
+                <input type="number" id="School_id" name="School_id" required><br>
+                <label for="Phone_number">전화번호:</label>
+                <input type="text" id="Phone_number" name="Phone_number" required><br>
+                <button type="submit" name="add_member">추가</button>
+            </form>
+        </div>
+    </div>
 </body>
 </html>

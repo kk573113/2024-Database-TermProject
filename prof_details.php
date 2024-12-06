@@ -71,33 +71,107 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['delete_meeting'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>교수 상세 정보</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        h1 {
+            background-color: #11264f;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            padding: 20px;
+            margin: 0 auto;
+            max-width: 800px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #11264f;
+            border-bottom: 2px solid #11264f;
+            padding-bottom: 8px;
+            margin-bottom: 20px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #11264f;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        button {
+            background-color: #11264f;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin-top: 10px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        button:hover {
+            background-color: #0d1a37;
+        }
+        .link-button {
+            text-decoration: none;
+            display: inline-block;
+        }
+        .back-button {
+          margin-left: 20px;
+          margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
     <h1>교수 상세 정보</h1>
-
-    <!-- 교수 정보 -->
-    <h2>교수 정보</h2>
-    <form method="POST" action="">
-        <table border="1">
-            <tr>
-                <th>교수 ID</th>
-                <td><?php echo htmlspecialchars($professor['Pf_id']); ?></td>
-            </tr>
-            <tr>
-                <th>이름</th>
-                <td><input type="text" name="Name" value="<?php echo htmlspecialchars($professor['Name']); ?>" required></td>
-            </tr>
-            <tr>
-                <th>전화번호</th>
-                <td><input type="text" name="Phone_number" value="<?php echo htmlspecialchars($professor['Phone_number']); ?>" required></td>
-            </tr>
-            <tr>
-                <th>전공</th>
-                <td><input type="text" name="Major" value="<?php echo htmlspecialchars($professor['Major']); ?>" required></td>
-            </tr>
-        </table>
-        <button type="submit" name="edit_professor">수정하기</button>
-    </form>
-    <a href="index.php">뒤로가기</a>
+    <div class="back-button">
+        <a href="index.php" class="link-button">
+            <button type="button">뒤로가기</button>
+        </a>
+    </div>
+    <div class="container">
+        <?php if ($professor): ?>
+            <h2>교수 정보</h2>
+            <form method="POST" action="">
+                <table>
+                    <tr>
+                        <th>교수 ID</th>
+                        <td><?php echo htmlspecialchars($professor['Pf_id']); ?></td>
+                    </tr>
+                    <tr>
+                        <th>이름</th>
+                        <td><input type="text" name="Name" value="<?php echo htmlspecialchars($professor['Name']); ?>" required></td>
+                    </tr>
+                    <tr>
+                        <th>전화번호</th>
+                        <td><input type="text" name="Phone_number" value="<?php echo htmlspecialchars($professor['Phone_number']); ?>" required></td>
+                    </tr>
+                    <tr>
+                        <th>전공</th>
+                        <td><input type="text" name="Major" value="<?php echo htmlspecialchars($professor['Major']); ?>" required></td>
+                    </tr>
+                </table>
+                <button type="submit" name="edit_professor">수정</button>
+            </form>
+        <?php else: ?>
+            <p>해당 교수 정보를 찾을 수 없습니다.</p>
+        <?php endif; ?>
+    </div>
 </body>
 </html>

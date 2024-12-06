@@ -69,52 +69,156 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>동아리 예산 상세 정보 보기</title>
+    <title>동아리 예산 상세 정보</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        h1 {
+            background-color: #11264f;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .back-button {
+            margin-left: 20px; 
+            margin-top: 10px;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
+        }
+        .section {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #11264f;
+            border-bottom: 2px solid #11264f;
+            padding-bottom: 8px;
+            margin-bottom: 20px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #11264f;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        button {
+            background-color: #11264f;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin-top: 10px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        button:hover {
+            background-color: #0d1a37;
+        }
+        .link-button {
+            text-decoration: none;
+            display: inline-block;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            margin: 8px 0;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .add-form {
+            margin-top: 20px;
+        }
+        @media (max-width: 768px) {
+            th, td {
+                font-size: 14px;
+            }
+            button {
+                font-size: 12px;
+                padding: 8px 16px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>예산 내역</h1>
+    <h1>예산 상세 정보</h1>
+    <div class="back-button">
+        <a href="club_details.php?Club_id=<?php echo $club_id; ?>" class="link-button">
+            <button type="button">뒤로가기</button>
+        </a>
+    </div>
+    <div class="container">
+        <!-- 예산 목록 -->
+        <div class="section">
+            <h2>예산 내역</h2>
+            <form method="POST" action="">
+                <table>
+                    <tr>
+                        <th>예산 ID</th>
+                        <th>담당자</th>
+                        <th>금액</th>
+                        <th>목적</th>
+                        <th>수정</th>
+                        <th>삭제</th>
+                    </tr>
+                    <?php foreach ($budget as $item): ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($item['Budget_id']); ?></td>
+                            <td>
+                                <input type="text" name="Manager_name_<?php echo $item['Budget_id']; ?>" value="<?php echo htmlspecialchars($item['Manager_name']); ?>" required>
+                            </td>
+                            <td>
+                                <input type="number" name="Amount_<?php echo $item['Budget_id']; ?>" value="<?php echo htmlspecialchars($item['Amount']); ?>" required>
+                            </td>
+                            <td>
+                                <input type="text" name="Purpose_<?php echo $item['Budget_id']; ?>" value="<?php echo htmlspecialchars($item['Purpose']); ?>" required>
+                            </td>
+                            <td>
+                                <button type="submit" name="update_budget" value="<?php echo $item['Budget_id']; ?>">수정</button>
+                            </td>
+                            <td>
+                                <button type="submit" name="delete_budget" value="<?php echo $item['Budget_id']; ?>">삭제</button>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </table>
+            </form>
+        </div>
 
-    <!-- 예산 수정 및 삭제 -->
-    <form method="POST" action="">
-        <table border="1">
-            <tr>
-                <th>예산 ID</th>
-                <th>담당자</th>
-                <th>금액</th>
-                <th>목적</th>
-                <th>수정</th>
-                <th>삭제</th>
-            </tr>
-            <?php foreach ($budget as $item): ?>
-                <tr>
-                    <td><?php echo htmlspecialchars($item['Budget_id']); ?></td>
-                    <td><input type="text" name="Manager_name_<?php echo $item['Budget_id']; ?>" value="<?php echo htmlspecialchars($item['Manager_name']); ?>" required></td>
-                    <td><input type="number" name="Amount_<?php echo $item['Budget_id']; ?>" value="<?php echo htmlspecialchars($item['Amount']); ?>" required></td>
-                    <td><input type="text" name="Purpose_<?php echo $item['Budget_id']; ?>" value="<?php echo htmlspecialchars($item['Purpose']); ?>" required></td>
-                    <td>
-                        <button type="submit" name="update_budget" value="<?php echo $item['Budget_id']; ?>">수정</button>
-                    </td>
-                    <td>
-                        <button type="submit" name="delete_budget" value="<?php echo $item['Budget_id']; ?>">삭제</button>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-        </table>
-    </form>
-
-    <!-- 예산 추가 -->
-    <h3>예산 내역 추가</h3>
-    <form method="POST" action="">
-        <label for="Manager_name">담당자 이름:</label>
-        <input type="text" id="Manager_name" name="Manager_name" required><br>
-        <label for="Amount">금액:</label>
-        <input type="number" id="Amount" name="Amount" required><br>
-        <label for="Purpose">목적:</label>
-        <input type="text" id="Purpose" name="Purpose" required><br>
-        <button type="submit" name="add_budget">추가</button>
-    </form>
-
-    <a href="club_details.php?Club_id=<?php echo $club_id; ?>">뒤로가기</a>
+        <!-- 예산 추가 -->
+        <div class="section add-form">
+            <h2>예산 내역 추가</h2>
+            <form method="POST" action="">
+                <label for="Manager_name">담당자 이름:</label>
+                <input type="text" id="Manager_name" name="Manager_name" required><br>
+                <label for="Amount">금액:</label>
+                <input type="number" id="Amount" name="Amount" required><br>
+                <label for="Purpose">목적:</label>
+                <input type="text" id="Purpose" name="Purpose" required><br>
+                <button type="submit" name="add_budget">추가</button>
+            </form>
+        </div>
+    </div>
 </body>
 </html>
-
