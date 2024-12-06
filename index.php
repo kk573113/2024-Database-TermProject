@@ -184,7 +184,6 @@ try {
                 }
                 ?>
             </table>
-            <button type="submit">삭제하기</button>
           </form>
           <a href="add_meet.php">추가하기</a>
         </div>

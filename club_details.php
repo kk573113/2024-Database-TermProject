@@ -39,6 +39,43 @@ $stmt_activities->bindParam(':club_id', $club_id, PDO::PARAM_INT);
 $stmt_activities->execute();
 $activities = $stmt_activities->fetchAll(PDO::FETCH_ASSOC);
 
+// 예산 추가 처리
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['add_budget'])) {
+    $manager_name = $_POST['Manager_name'];
+    $amount = $_POST['Amount'];
+    $purpose = $_POST['Purpose'];
+
+    $sql_insert_budget = "INSERT INTO BUDGET (Club_id, Manager_name, Amount, Purpose) 
+                          VALUES (:club_id, :manager_name, :amount, :purpose)
+                          ON DUPLICATE KEY UPDATE Manager_name = :manager_name, Amount = :amount, Purpose = :purpose";
+    $stmt_insert_budget = $pdo->prepare($sql_insert_budget);
+    $stmt_insert_budget->bindParam(':club_id', $club_id, PDO::PARAM_INT);
+    $stmt_insert_budget->bindParam(':manager_name', $manager_name, PDO::PARAM_STR);
+    $stmt_insert_budget->bindParam(':amount', $amount, PDO::PARAM_INT);
+    $stmt_insert_budget->bindParam(':purpose', $purpose, PDO::PARAM_STR);
+    $stmt_insert_budget->execute();
+    header("Location: club_details.php?Club_id=$club_id");
+    exit;
+}
+
+// 멤버 추가 처리
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['add_member'])) {
+    $name = $_POST['Name'];
+    $school_id = $_POST['School_id'];
+    $phone_number = $_POST['Phone_number'];
+
+    $sql_insert_member = "INSERT INTO MEMBER (Name, School_id, Phone_number, Club_id) 
+                          VALUES (:name, :school_id, :phone_number, :club_id)";
+    $stmt_insert_member = $pdo->prepare($sql_insert_member);
+    $stmt_insert_member->bindParam(':name', $name, PDO::PARAM_STR);
+    $stmt_insert_member->bindParam(':school_id', $school_id, PDO::PARAM_INT);
+    $stmt_insert_member->bindParam(':phone_number', $phone_number, PDO::PARAM_STR);
+    $stmt_insert_member->bindParam(':club_id', $club_id, PDO::PARAM_INT);
+    $stmt_insert_member->execute();
+    header("Location: club_details.php?Club_id=$club_id");
+    exit;
+}
+
 // 활동 추가 처리
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['add_activity'])) {
     $act_name = $_POST['ACT_name'];
@@ -136,8 +173,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['add_activity'])) {
     <?php else: ?>
         <p>예산 정보가 없습니다.</p>
     <?php endif; ?>
+
     <h3>예산 추가</h3>
-      <form method="POST" action="">
+    <form method="POST" action="">
         <label for="Manager_name">담당자 이름:</label>
         <input type="text" id="Manager_name" name="Manager_name" required><br>
         <label for="Amount">예산 금액:</label>
@@ -145,7 +183,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['add_activity'])) {
         <label for="Purpose">목적:</label>
         <input type="text" id="Purpose" name="Purpose" required><br>
         <button type="submit" name="add_budget">예산 추가</button>
-      </form>
+    </form>
 
     <h2>동아리원 목록</h2>
     <?php if ($members): ?>
@@ -168,26 +206,24 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['add_activity'])) {
     <?php else: ?>
         <p>멤버가 없습니다.</p>
     <?php endif; ?>
-    <!-- 멤버 추가 -->
-    <h3>멤버 추가</h3>
-      <form method="POST" action="">
-      <label for="Name">이름:</label>
-      <input type="text" id="Name" name="Name" required><br>
-      <label for="School_id">학번:</label>
-      <input type="number" id="School_id" name="School_id" required><br>
-      <label for="Phone_number">전화번호:</label>
-      <input type="text" id="Phone_number" name="Phone_number" required><br>
-      <label for="Club_id">소속 동아리 ID:</label>
-      <input type="number" id="Club_id" name="Club_id" required><br>
-      <button type="submit" name="add_member">멤버 추가</button>
-    </form>
 
+    <h3>동아리원 추가</h3>
+    <form method="POST" action="">
+        <label for="Name">이름:</label>
+        <input type="text" id="Name" name="Name" required><br>
+        <label for="School_id">학번:</label>
+        <input type="number" id="School_id" name="School_id" required><br>
+        <label for="Phone_number">전화번호:</label>
+        <input type="text" id="Phone_number" name="Phone_number" required><br>
+        <button type="submit" name="add_member">동아리원 추가</button>
+    </form>
     <!-- 활동 정보 -->
     <h2>활동 정보</h2>
     <?php if ($activities): ?>
         <table border="1">
             <tr>
                 <th>활동 ID</th>
+                <th>동아리 ID</th>
                 <th>활동 이름</th>
                 <th>시작 날짜</th>
                 <th>종료 날짜</th>
@@ -196,6 +232,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['add_activity'])) {
             <?php foreach ($activities as $activity): ?>
                 <tr>
                     <td><?php echo htmlspecialchars($activity['ACT_id']); ?></td>
+                    <td><?php echo htmlspecialchars($activity['Club_id']); ?></td>
                     <td><?php echo htmlspecialchars($activity['ACT_name']); ?></td>
                     <td><?php echo htmlspecialchars($activity['Start_date']); ?></td>
                     <td><?php echo htmlspecialchars($activity['End_date']); ?></td>
@@ -210,6 +247,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['add_activity'])) {
     <!-- 활동 추가 -->
     <h3>활동 추가</h3>
     <form method="POST" action="">
+        <label for="ACT_id">동아리 ID:</label>
+        <input type="INT" id="ACT_id" name="ACT_id" required><br>
         <label for="ACT_name">활동 이름:</label>
         <input type="text" id="ACT_name" name="ACT_name" required><br>
         <label for="Start_date">시작 날짜:</label>
