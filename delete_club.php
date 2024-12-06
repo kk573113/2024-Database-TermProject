@@ -1,32 +1,48 @@
 <?php
 include 'config.php'; // PDO 연결
 
-if (isset($_GET['Club_id'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['Club_id'])) {
     $club_id = $_GET['Club_id'];
 
     try {
-        // 동아리 삭제 쿼리
-        $sql = "DELETE FROM CLUB WHERE Club_id = :club_id";
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(':club_id', $club_id, PDO::PARAM_INT);
-        $stmt->execute();
+        // 트랜잭션 시작
+        $pdo->beginTransaction();
 
-        // 성공 메시지와 함께 index.php로 리디렉션
-        echo "<script>
-                alert('동아리가 성공적으로 삭제되었습니다.');
-                window.location.href = 'index.php';
-              </script>";
+        // BUDGET 테이블의 Club_id 관련 데이터 삭제
+        $sql_delete_budget = "DELETE FROM BUDGET WHERE Club_id = :club_id";
+        $stmt_delete_budget = $pdo->prepare($sql_delete_budget);
+        $stmt_delete_budget->bindParam(':club_id', $club_id, PDO::PARAM_INT);
+        $stmt_delete_budget->execute();
+
+        // MEMBER 테이블의 Club_id 관련 데이터 삭제
+        $sql_delete_members = "DELETE FROM MEMBER WHERE Club_id = :club_id";
+        $stmt_delete_members = $pdo->prepare($sql_delete_members);
+        $stmt_delete_members->bindParam(':club_id', $club_id, PDO::PARAM_INT);
+        $stmt_delete_members->execute();
+
+        // ACTIVITY 테이블의 Club_id 관련 데이터 삭제
+        $sql_delete_activity = "DELETE FROM ACTIVITY WHERE Club_id = :club_id";
+        $stmt_delete_activity = $pdo->prepare($sql_delete_activity);
+        $stmt_delete_activity->bindParam(':club_id', $club_id, PDO::PARAM_INT);
+        $stmt_delete_activity->execute();
+
+        // CLUB 테이블에서 데이터 삭제
+        $sql_delete_club = "DELETE FROM CLUB WHERE Club_id = :club_id";
+        $stmt_delete_club = $pdo->prepare($sql_delete_club);
+        $stmt_delete_club->bindParam(':club_id', $club_id, PDO::PARAM_INT);
+        $stmt_delete_club->execute();
+
+        // 트랜잭션 커밋
+        $pdo->commit();
+
+        // 삭제 완료 후 리다이렉트
+        header("Location: index.php?message=Club deleted successfully");
+        exit;
     } catch (PDOException $e) {
-        // 오류 메시지와 함께 이전 페이지로 돌아감
-        echo "<script>
-                alert('삭제 중 오류가 발생했습니다: " . $e->getMessage() . "');
-                window.history.back();
-              </script>";
+        // 오류 발생 시 트랜잭션 롤백
+        $pdo->rollBack();
+        echo "삭제 중 오류가 발생했습니다: " . $e->getMessage();
     }
 } else {
-    // Club_id가 없는 경우 index.php로 리디렉션
-    echo "<script>
-            alert('잘못된 요청입니다.');
-            window.location.href = 'index.php';
-          </script>";
+    echo "유효하지 않은 요청입니다.";
 }
