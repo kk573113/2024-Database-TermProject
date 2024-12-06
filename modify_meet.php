@@ -99,6 +99,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['delete_meeting'])) {
         <button type="submit" name="update_meeting">수정</button>
         <button type="submit" name="delete_meeting" onclick="return confirm('정말로 삭제하시겠습니까?');">삭제</button>
     </form>
-    <a href="index.php">돌아가기</a>
+    <a href="index.php">뒤로가기</a>
 </body>
 </html>

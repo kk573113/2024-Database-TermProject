@@ -98,6 +98,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['delete_meeting'])) {
         </table>
         <button type="submit" name="edit_professor">수정하기</button>
     </form>
-    <a href="index.php">돌아가기</a>
+    <a href="index.php">뒤로가기</a>
 </body>
 </html>
