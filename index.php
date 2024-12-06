@@ -8,7 +8,7 @@ $result_meetings = []; // 미팅 목록 초기화
 
 try {
     // 동아리 데이터 조회 쿼리
-    $sql_clubs = "SELECT Club_id, Name, Interest, Pf_id FROM CLUB";
+    $sql_clubs = "SELECT Club_id, Name, Interest, Club_room, Pf_id FROM CLUB";
     $stmt_clubs = $pdo->prepare($sql_clubs);
     $stmt_clubs->execute();
     $result_clubs = $stmt_clubs->fetchAll(PDO::FETCH_ASSOC);
@@ -71,6 +71,7 @@ try {
                     <th>동아리 ID</th>
                     <th>동아리 이름</th>
                     <th>관심 분야</th>
+                    <th>동아리 방</th>
                     <th>교수 ID</th>
                     <th>상세 정보</th>
                 </tr>
@@ -81,6 +82,7 @@ try {
                             <td>{$row['Club_id']}</td>
                             <td>{$row['Name']}</td>
                             <td>{$row['Interest']}</td>
+                            <td>{$row['Club_room']}</td>
                             <td>{$row['Pf_id']}</td>
                             <td><a href='club_details.php?Club_id={$row['Club_id']}'>상세 정보</a></td>
                         </tr>";
