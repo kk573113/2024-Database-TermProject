@@ -12,7 +12,7 @@ $stmt_all_clubs->execute();
 $all_clubs = $stmt_all_clubs->fetchAll(PDO::FETCH_ASSOC);
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    // 합류 동아리 처리
+    // 동아리 합류
     if (isset($_POST['merge_club_id'])) {
         $merge_club_id = $_POST['merge_club_id'];
 

@@ -11,7 +11,7 @@ $stmt_professor->bindParam(':pf_id', $pf_id, PDO::PARAM_INT);
 $stmt_professor->execute();
 $professor = $stmt_professor->fetch(PDO::FETCH_ASSOC);
 
-// 미팅 정보 조회
+// 회의 정보 조회
 $sql_meetings = "SELECT * FROM MEETING WHERE Pf_id = :pf_id";
 $stmt_meetings = $pdo->prepare($sql_meetings);
 $stmt_meetings->bindParam(':pf_id', $pf_id, PDO::PARAM_INT);
@@ -35,24 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['edit_professor'])) {
     exit;
 }
 
-// 미팅 추가 처리
-if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['add_meeting'])) {
-    $date = $_POST['Date'];
-    $place = $_POST['Place'];
-    $agenda = $_POST['Agenda'];
-
-    $sql_insert_meeting = "INSERT INTO MEETING (Date, Place, Agenda, Pf_id) VALUES (:date, :place, :agenda, :pf_id)";
-    $stmt_insert_meeting = $pdo->prepare($sql_insert_meeting);
-    $stmt_insert_meeting->bindParam(':date', $date, PDO::PARAM_STR);
-    $stmt_insert_meeting->bindParam(':place', $place, PDO::PARAM_STR);
-    $stmt_insert_meeting->bindParam(':agenda', $agenda, PDO::PARAM_STR);
-    $stmt_insert_meeting->bindParam(':pf_id', $pf_id, PDO::PARAM_INT);
-    $stmt_insert_meeting->execute();
-    header("Location: prof_details.php?Pf_id=$pf_id");
-    exit;
-}
-
-// 미팅 삭제 처리
+// 회의 삭제 처리
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['delete_meeting'])) {
     $meet_id = $_POST['Meet_id'];
 
@@ -133,8 +116,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['delete_meeting'])) {
             display: inline-block;
         }
         .back-button {
-          margin-left: 20px;
-          margin-bottom: 20px;
+            margin-left: 20px;
+            margin-bottom: 20px;
         }
     </style>
 </head>
@@ -171,6 +154,38 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['delete_meeting'])) {
             </form>
         <?php else: ?>
             <p>해당 교수 정보를 찾을 수 없습니다.</p>
+        <?php endif; ?>
+    </div>
+
+    <!-- 해당 교수가 진행한 회의 목록 -->
+    <div class="container">
+        <h2>진행한 회의 목록</h2>
+        <?php if (!empty($meetings)): ?>
+            <table>
+                <tr>
+                    <th>회의 ID</th>
+                    <th>날짜</th>
+                    <th>장소</th>
+                    <th>안건</th>
+                    <th>삭제</th>
+                </tr>
+                <?php foreach ($meetings as $meeting): ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($meeting['Meet_id']); ?></td>
+                        <td><?php echo htmlspecialchars($meeting['Date']); ?></td>
+                        <td><?php echo htmlspecialchars($meeting['Place']); ?></td>
+                        <td><?php echo htmlspecialchars($meeting['Agenda']); ?></td>
+                        <td>
+                            <form method="POST" action="" style="display:inline;">
+                                <input type="hidden" name="Meet_id" value="<?php echo $meeting['Meet_id']; ?>">
+                                <button type="submit" name="delete_meeting" onclick="return confirm('회의를 삭제하시겠습니까?');">삭제</button>
+                            </form>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </table>
+        <?php else: ?>
+            <p>진행한 회의가 없습니다.</p>
         <?php endif; ?>
     </div>
 </body>

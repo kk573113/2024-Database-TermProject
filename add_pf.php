@@ -8,7 +8,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $phone_number = $_POST['Phone_number'];
     $major = $_POST['Major'];
 
-    // 데이터베이스에 교수 추가
+    // 교수 추가
     $sql = "INSERT INTO PROFESSOR (Pf_id, Name, Phone_number, Major) 
             VALUES (:pf_id, :name, :phone_number, :major)";
     $stmt = $pdo->prepare($sql);
