@@ -18,9 +18,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->bindParam(':major', $major, PDO::PARAM_STR);
 
     if ($stmt->execute()) {
-        echo "<p>교수가 성공적으로 추가되었습니다!</p>";
+        echo "<p>성공적으로 추가되었습니다!</p>";
     } else {
-        echo "<p>교수 추가에 실패했습니다.</p>";
+        echo "<p>추가에 실패했습니다.</p>";
     }
 }
 ?>
