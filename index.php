@@ -19,12 +19,12 @@ try {
     $stmt_professors->execute();
     $result_professors = $stmt_professors->fetchAll(PDO::FETCH_ASSOC);
 
-    // 동아리원 데이터 조회 쿼리
-    $sql_members = "SELECT Name, School_id, Phone_number, Club_id FROM MEMBER";
+   // 동아리원 데이터 조회 쿼리 - 동아리 ID별로 정렬
+    $sql_members = "SELECT Name, School_id, Phone_number, Club_id FROM MEMBER ORDER BY Club_id ASC";
     $stmt_members = $pdo->prepare($sql_members);
     $stmt_members->execute();
     $result_members = $stmt_members->fetchAll(PDO::FETCH_ASSOC);
-
+    
     // 회의 데이터 조회 쿼리
     $sql_meetings = "SELECT Meet_id, Date, Place, Agenda, Pf_id FROM MEETING";
     $stmt_meetings = $pdo->prepare($sql_meetings);
@@ -104,6 +104,11 @@ try {
         button:hover {
             background-color: #1A2530;
         }
+        .add-delete-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
         .add-button {
             text-align: right;
         }
@@ -179,12 +184,14 @@ try {
                         echo "<tr><td colspan='6'>교수가 없습니다.</td></tr>";
                     } ?>
                 </table>
-                <button type="submit">삭제하기</button>
+                <div class="add-delete-buttons">
+                    <button type="submit">삭제하기</button>
+                    <a href="add_pf.php"><button type="button">추가하기</button></a>
+                </div>
             </form>
-            <div class="add-button"><a href="add_pf.php"><button>추가하기</button></a></div>
         </div>
 
-        <!-- 동아리원 목록 -->
+        <!-- 전체 동아리원 목록 -->
         <div>
             <h2>전체 동아리원 목록</h2>
             <form method="POST" action="delete_member.php">
@@ -210,7 +217,9 @@ try {
                         echo "<tr><td colspan='5'>동아리원이 없습니다.</td></tr>";
                     } ?>
                 </table>
-                <button type="submit">삭제하기</button>
+                <div class="add-button">
+                    <button type="submit">삭제하기</button>
+                </div>
             </form>
         </div>
 

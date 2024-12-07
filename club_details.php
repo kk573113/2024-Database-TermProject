@@ -11,6 +11,13 @@ $stmt_club->bindParam(':club_id', $club_id, PDO::PARAM_INT);
 $stmt_club->execute();
 $club = $stmt_club->fetch(PDO::FETCH_ASSOC);
 
+// 모든 동아리 목록 조회 (현재 동아리는 제외)
+$sql_all_clubs = "SELECT * FROM CLUB WHERE Club_id != :club_id";
+$stmt_all_clubs = $pdo->prepare($sql_all_clubs);
+$stmt_all_clubs->bindParam(':club_id', $club_id, PDO::PARAM_INT);
+$stmt_all_clubs->execute();
+$all_clubs = $stmt_all_clubs->fetchAll(PDO::FETCH_ASSOC);
+
 // 교수 정보 조회 (Pf_id가 NULL이 아닐 경우에만 조회)
 $professor = null;
 if ($club['Pf_id']) {
@@ -308,7 +315,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         <a href="delete_club.php?Club_id=<?php echo $club_id; ?>" class="link-button" onclick="return confirm('동아리의 모든 정보가 삭제됩니다. 삭제하시겠습니까?');">
                             <button type="button">삭제</button>
                         </a>
+                        <a href="merge_club.php?Club_id=<?php echo $club_id; ?>" class="link-button">
+                            <button type="button">합류하기</button>
+                        </a>
                     </div>
+
                 </form>
             <!-- 추가 정보 링크 -->
             <h3>추가 정보</h3>
