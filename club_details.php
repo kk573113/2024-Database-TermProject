@@ -34,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $name = $_POST['Name'];
         $club_room = $_POST['Club_room'];
         $interest = $_POST['Interest'];
-        $pf_id = $_POST['Pf_id']; // 지도교수 ID 추가
+        $pf_id = $_POST['Pf_id']; 
 
         // 입력된 Pf_id가 PROFESSOR 테이블에 존재하는지 확인
         $sql_check_professor = "SELECT COUNT(*) FROM PROFESSOR WHERE Pf_id = :pf_id";
@@ -78,7 +78,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $major = $_POST['Major'];
 
         if ($professor) {
-            // 교수 정보 테이블 업데이트
+            // 수정된 정보 업데이트
             $sql_update_professor = "UPDATE PROFESSOR SET Name = :name, Phone_number = :phone, Major = :major WHERE Pf_id = :pf_id";
             $stmt_update_professor = $pdo->prepare($sql_update_professor);
             $stmt_update_professor->bindParam(':name', $name, PDO::PARAM_STR);
@@ -90,7 +90,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             exit;
         }
     }
-  // 동아리원 추가/수정/삭제
+  // 동아리원 추가
   if (isset($_POST['add_member'])) {
       $name = $_POST['Name'];
       $school_id = $_POST['School_id'];
@@ -108,6 +108,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       exit;
   }
 
+  // 동아리원 수정
   if (isset($_POST['update_member'])) {
       $name = $_POST['Name'];
       $phone_number = $_POST['Phone_number'];
@@ -122,7 +123,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       header("Location: club_details.php?Club_id=$club_id");
       exit;
   }
-
+  // 동아리원 삭제
   if (isset($_POST['delete_member'])) {
       $school_id = $_POST['delete_member'];
 
@@ -308,7 +309,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                         <a href="delete_club.php?Club_id=<?php echo $club_id; ?>" class="link-button" onclick="return confirm('동아리의 모든 정보가 삭제됩니다. 삭제하시겠습니까?');">
                             <button type="button">삭제</button>
                         </a>
+                        <a href="merge_club.php?Club_id=<?php echo $club_id; ?>" class="link-button">
+                            <button type="button">합류하기</button>
+                        </a>
                     </div>
+
                 </form>
             <!-- 추가 정보 링크 -->
             <h3>추가 정보</h3>

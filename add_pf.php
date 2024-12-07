@@ -8,7 +8,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $phone_number = $_POST['Phone_number'];
     $major = $_POST['Major'];
 
-    // 데이터베이스에 교수 추가
+    // 교수 추가
     $sql = "INSERT INTO PROFESSOR (Pf_id, Name, Phone_number, Major) 
             VALUES (:pf_id, :name, :phone_number, :major)";
     $stmt = $pdo->prepare($sql);
@@ -18,9 +18,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->bindParam(':major', $major, PDO::PARAM_STR);
 
     if ($stmt->execute()) {
-        echo "<p>교수가 성공적으로 추가되었습니다!</p>";
+        echo "<p>성공적으로 추가되었습니다!</p>";
     } else {
-        echo "<p>교수 추가에 실패했습니다.</p>";
+        echo "<p>추가에 실패했습니다.</p>";
     }
 }
 ?>

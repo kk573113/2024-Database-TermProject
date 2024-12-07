@@ -18,9 +18,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->bindParam(':pf_id', $pf_id, PDO::PARAM_INT);
 
     if ($stmt->execute()) {
-        echo "<p>회의가 성공적으로 추가되었습니다!</p>";
+        echo "<p>성공적으로 추가되었습니다!</p>";
     } else {
-        echo "<p>회의 추가에 실패했습니다.</p>";
+        echo "<p>추가에 실패했습니다.</p>";
     }
 }
 ?>
@@ -90,7 +90,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         .back-button {
             margin: 20px 0;
-            margin-left: 20px; /* 왼쪽 여백 추가 */
+            margin-left: 20px; 
         }
     </style>
 </head>

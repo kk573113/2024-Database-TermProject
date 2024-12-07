@@ -29,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['Pf_id'])) {
 
         // 성공 메시지와 함께 index.php로 리디렉션
         echo "<script>
-                alert('교수가 성공적으로 삭제되었습니다.');
+                alert('성공적으로 삭제되었습니다.');
                 window.location.href = 'index.php';
               </script>";
     } catch (PDOException $e) {
@@ -42,7 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['Pf_id'])) {
 } else {
     // Pf_id가 없는 경우 index.php로 리디렉션
     echo "<script>
-            alert('잘못된 요청입니다. 교수를 선택하세요.');
+            alert('잘못된 요청입니다. 삭제할 항목을 선택하세요.');
             window.location.href = 'index.php';
           </script>";
 }

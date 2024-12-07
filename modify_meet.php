@@ -112,44 +112,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['update_meeting'])) {
             padding-bottom: 8px;
             margin-bottom: 20px;
         }
-        table {
-            border-collapse: collapse;
-            width: 100%;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 12px;
-            text-align: left;
-        }
-        th {
-            background-color: #11264f;
-            color: white;
-        }
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-        button {
-            background-color: #11264f;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            margin-top: 10px;
-            cursor: pointer;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-        button:hover {
-            background-color: #0d1a37;
-        }
-        .link-button {
-            text-decoration: none;
-            display: inline-block;
-        }
-        .actions {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-        }
         input[type="text"], input[type="number"], input[type="date"] {
             width: 100%;
             padding: 8px;
@@ -158,14 +120,32 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['update_meeting'])) {
             border: 1px solid #ddd;
             border-radius: 4px;
         }
+        button {
+            background-color: #11264f;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        button:hover {
+            background-color: #0d1a37;
+        }
+        .actions {
+            display: flex;
+            justify-content: flex-start; 
+            gap: 10px; 
+        }
+        .link-button {
+            text-decoration: none;
+            display: inline-block;
+        }
         .back-button {
             margin-left: 20px;
             margin-top: 10px;
         }
         @media (max-width: 768px) {
-            th, td {
-                font-size: 14px;
-            }
             button {
                 font-size: 12px;
                 padding: 8px 16px;
